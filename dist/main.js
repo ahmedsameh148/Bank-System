@@ -1,2 +1,1 @@
-"use strict";
-console.log('Ahmed');
+console.log('This Is Main File');
