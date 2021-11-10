@@ -1,55 +1,9 @@
-import {AnyError, Collection, Db, InsertOneResult, MongoClient, ObjectId} from 'mongodb';
-import { TypeFlags } from 'typescript';
-
-const url = "mongodb://localhost:27017/";
 
 
-const connect = (): Promise<{mongoClient: MongoClient, db: Db}> => {
-    return new Promise((resolve, reject) => {
-        MongoClient.connect(url,function( err, mongoClient: MongoClient|undefined){
-            if(err) return reject(err);
-            if (mongoClient) return resolve({mongoClient, db: mongoClient.db("Bank")})
-            return reject(new Error("can't connect to db"))
-        });
-    });
-}
 
-function insert(collection: string, data: object) {
-    return new Promise((resolve, reject) => {
-        connect().then((d) => {
-            return d.db.collection(collection).insertOne(data,function(err, res)  {
-                if (err) return reject(err);
-                d.mongoClient.close();
-                return resolve(res?.insertedId.toString());
-            });
-        })
-    });
-}
 
-function get(collection: string, data: object) {
 
-    return new Promise((resolve, reject) => {
-        connect().then((d) => {
-            return d.db.collection(collection).find(data).toArray(function(err, res)  {
-                if (err) return reject(err);
-                d.mongoClient.close();
-                return resolve(res);
-            });
-        })
-    });
-}
 
-async function addUser(Name: string, BirthDate: string, Email: string, Mobile: string){
-
-    let id = await insert( "User",  {Name: Name, BirthDate: BirthDate, Email: Email, Mobile: Mobile})
-    return await id;
-}
-
-async function getUser(data : object){
-    
-    //const id = new ObjectId(UserId);
-    return await get("User", data);
-}
 
 async function addAccount(UserId: any, AccountNumber: number, Balnce: number){
     
