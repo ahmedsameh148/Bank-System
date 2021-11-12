@@ -1,14 +1,14 @@
-import {AnyError, Collection, Db, InsertOneResult, MongoClient, ObjectId} from 'mongodb';
+import { AnyError, Collection, Db, InsertOneResult, MongoClient, ObjectId } from 'mongodb';
 import { TypeFlags } from 'typescript';
-
+import { Account } from './updateAccount';
 const url = "mongodb://localhost:27017/";
 
 
-const connect = (): Promise<{mongoClient: MongoClient, db: Db}> => {
+const connect = (): Promise<{ mongoClient: MongoClient, db: Db }> => {
     return new Promise((resolve, reject) => {
-        MongoClient.connect(url,function( err, mongoClient: MongoClient|undefined){
-            if(err) return reject(err);
-            if (mongoClient) return resolve({mongoClient, db: mongoClient.db("Bank")})
+        MongoClient.connect(url, function (err, mongoClient: MongoClient | undefined) {
+            if (err) return reject(err);
+            if (mongoClient) return resolve({ mongoClient, db: mongoClient.db("Bank") })
             return reject(new Error("can't connect to db"))
         });
     });
@@ -17,7 +17,7 @@ const connect = (): Promise<{mongoClient: MongoClient, db: Db}> => {
 function insert(collection: string, data: object) {
     return new Promise((resolve, reject) => {
         connect().then((d) => {
-            return d.db.collection(collection).insertOne(data,function(err, res)  {
+            return d.db.collection(collection).insertOne(data, function (err, res) {
                 if (err) return reject(err);
                 d.mongoClient.close();
                 return resolve(res?.insertedId.toString());
@@ -27,10 +27,9 @@ function insert(collection: string, data: object) {
 }
 
 function get(collection: string, data: object) {
-
     return new Promise((resolve, reject) => {
         connect().then((d) => {
-            return d.db.collection(collection).find(data).toArray(function(err, res)  {
+            return d.db.collection(collection).find(data).toArray(function (err, res) {
                 if (err) return reject(err);
                 d.mongoClient.close();
                 return resolve(res);
@@ -39,98 +38,108 @@ function get(collection: string, data: object) {
     });
 }
 
-async function addUser(Name: string, BirthDate: string, Email: string, Mobile: string){
 
-    let id = await insert( "User",  {Name: Name, BirthDate: BirthDate, Email: Email, Mobile: Mobile})
+function update(collection: string, data: object, updatedData: object) {
+    return new Promise((resolve, reject) => {
+        connect().then((d) => {
+            return d.db.collection(collection).updateOne(data, updatedData).then(() => resolve(true)).catch(reject);
+        });
+    });
+}
+export async function addUser(Name: string, BirthDate: string, Email: string, Mobile: string) {
+
+    let id = await insert("User", { Name: Name, BirthDate: BirthDate, Email: Email, Mobile: Mobile })
     return await id;
 }
 
-async function getUser(data : object){
-    
+export async function getUser(data: object) {
+
     //const id = new ObjectId(UserId);
     return await get("User", data);
 }
 
-async function addAccount(UserId: any, AccountNumber: number, Balnce: number){
-    
-    return await insert( "Account",  {UserId: UserId, AccountNumber: AccountNumber, Balnce: Balnce})
+export async function addAccount(UserId: any, AccountNumber: number, Balnce: number) {
+
+    return await insert("Account", { UserId: UserId, AccountNumber: AccountNumber, Balnce: Balnce })
 }
 
-async function getAccount(data : object){
-    
-    return await get("Account", data) 
+export async function getAccount(data: object): Promise<Account[] | any> {
+
+    return await get("Account", data)
+}
+export async function updateAccount(data: object,updatedData:object): Promise<Account[] | any> {
+
+    return await update("Account", data,updatedData);
 }
 
-async function addCard(AccountID: any, CardNumber: number, CardHolderName: string, ExpireDate: string,CVV: number, Status: string){
+async function addCard(AccountID: any, CardNumber: number, CardHolderName: string, ExpireDate: string, CVV: number, Status: string) {
 
-    return await insert( "Card",  {AccountID: AccountID, CardNumber: CardNumber, CardHolderName: CardHolderName, ExpireDate: ExpireDate,CVV: CVV,Status: Status})
+    return await insert("Card", { AccountID: AccountID, CardNumber: CardNumber, CardHolderName: CardHolderName, ExpireDate: ExpireDate, CVV: CVV, Status: Status })
 }
 
-async function getCard(data : object){
-    
+async function getCard(data: object) {
+
     return await get("Card", data)
 }
 
-async function addTransaction(FromAccount: string, ToAccount: string, Amount: string, Status: string){
+export async function addTransaction(FromAccount: string, ToAccount: string, Amount: string, Status: string) {
 
-    return await insert( "Transaction",  {FromAccount: FromAccount, ToAccount: ToAccount, Amount: Amount, Status: Status})
+    return await insert("Transaction", { FromAccount: FromAccount, ToAccount: ToAccount, Amount: Amount, Status: Status })
 }
 
-async function getTransaction(data : object){
-    
+export async function getTransaction(data: object) {
+
     return await get("Transaction", data)
 }
 
-async function addGateway(userId: any, userName: string, password: string, passwordExpireDate: string){
+export async function addGateway(userId: any, userName: string, password: string, passwordExpireDate: string) {
 
-    return await insert( "Gateway",  {userId: userId, userName: userName, password: password, passwordExpireDate: passwordExpireDate})
+    return await insert("Gateway", { userId: userId, userName: userName, password: password, passwordExpireDate: passwordExpireDate })
 }
 
-async function getGateway(data : object){
-    
+export async function getGateway(data: object) {
+
     return await get("Gateway", data)
 }
 
-async function createUser( Name: string, BirthDate: string, Email: string, Mobile: string, Balnce: number){
-    const userid = await addUser(Name,BirthDate,Email,Mobile);
-    const accountID = await addAccount(userid,Math.floor(Math.random()*1E16),Balnce)
-    let count=0;
-    for (let i=0;i<Name.length;i++)
-    {
-        if (Name[i]==' ')
-           {count++;
-            if (count==2)
-            {
-                count=i
+export async function createUser(Name: string, BirthDate: string, Email: string, Mobile: string, Balnce: number) {
+    const userid = await addUser(Name, BirthDate, Email, Mobile);
+    const accountID = await addAccount(userid, Math.floor(Math.random() * 1E16), Balnce)
+    let count = 0;
+    for (let i = 0; i < Name.length; i++) {
+        if (Name[i] == ' ') {
+            count++;
+            if (count == 2) {
+                count = i
                 break
             }
         }
     }
-    if (count<2)
-        count=Name.length
-    let cardID = await addCard(accountID,Math.floor(Math.random()*1E16),Name.substring(0,count),"11/24",Math.floor(Math.random()*1E3),"Active")
+    if (count < 2)
+        count = Name.length
+    let cardID = await addCard(accountID, Math.floor(Math.random() * 1E16), Name.substring(0, count), "11/24", Math.floor(Math.random() * 1E3), "Active")
     return userid;
 }
 
-async function createGateway (Name: string, Email: string, Mobile: string){
-    const userID = await createUser(Name,"1/1/2021",Email,Mobile,0)
-    var user=Name.split(" ").join("");
-    var pass=Math.random().toString(36).slice(-8)
+export async function createGateway(Name: string, Email: string, Mobile: string) {
+    const userID = await createUser(Name, "1/1/2021", Email, Mobile, 0)
+    var user = Name.split(" ").join("");
+    var pass = Math.random().toString(36).slice(-8)
     var today = new Date()
-    var mm = String(today.getMonth() + 1).padStart(2, '0') 
-    var yyyy = today.getFullYear()+1
+    var mm = String(today.getMonth() + 1).padStart(2, '0')
+    var yyyy = today.getFullYear() + 1
     var expir = mm + '/' + yyyy
-    addGateway(userID,user,pass,expir)
-    
+    addGateway(userID, user, pass, expir)
+
 }
 
-async function run() {
-    
-    let res = await createUser("Ahmed Elsayed Mohamed Mohamed","12/12/1995","ahmed@outlook.com","01555255222",100000)
-    console.log(await getUser({_id : new ObjectId(res.toString())}));
+export async function run() {
+
+    let res = await createUser("Ahmed Elsayed Mohamed Mohamed", "12/12/1995", "ahmed@outlook.com", "01555255222", 100000)
+    console.log(await getUser({ _id: new ObjectId(res.toString()) }));
 }
 
-module.exports = {createUser, createGateway, getUser, getAccount, getCard, getGateway, getTransaction};
+//module.exports = {createUser, createGateway, getUser, getAccount, getCard, getGateway, getTransaction,addTransaction};
 //run();
 //creategateway("Team 2","team2@gmail.com","0111111111")
 //addTransaction("8287392010546621","7423399946407152","1000","accepted")
