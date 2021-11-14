@@ -3,8 +3,8 @@ export class Transaction {
     from:string
     to:string
     amount:number
-    status:number
-    constructor(from: string,to: string,amount:number,status:number) {
+    status:string
+    constructor(from: string,to: string,amount:number,status:string) {
         this.from = from;
         this.to = to;
         this.amount = amount;

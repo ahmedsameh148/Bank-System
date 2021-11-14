@@ -1,13 +1,13 @@
 
 export class Card {
     id?:string
-    cvv:string
+    cvv:number
     accountId:string
-    expireDate:Date
-    cardNumber:string
+    expireDate:string
+    cardNumber:number
     cardHolderName:string
-    status:number
-    constructor(cvv:string,accountId:string,expireDate:Date,cardNumber:string,cardHolderName:string,status:number) {
+    status:string
+    constructor(cvv:number,accountId:string,expireDate:string,cardNumber:number,cardHolderName:string,status:string) {
         this.cvv=cvv
         this.accountId=accountId
         this.expireDate=expireDate

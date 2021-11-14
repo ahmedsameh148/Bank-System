@@ -4,7 +4,7 @@ import { Account } from "../Data/Models/Account.Model";
 
 let accountRepo = new AccountRepository()
 
-export class TransactionService {
+export class AccountService {
 
     async  addAccount(UserId: any, AccountNumber: number, Balnce: number){
     

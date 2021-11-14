@@ -16,10 +16,10 @@ export class UsersService {
         return await usersRepo.get(data);
     }
 
-    private async  addUser(Name: string, BirthDate: string, Email: string, Mobile: string) {
+     async  addUser(Name: string, BirthDate: string, Email: string, Mobile: string) {
        
 
-        const user = new User({Name: Name, BirthDate: BirthDate, Email: Email, Mobile: Mobile});
+        const user = new User(Name,BirthDate,Email,Mobile);
         return usersRepo.insert(user)
     }
 

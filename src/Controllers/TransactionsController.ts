@@ -16,8 +16,8 @@ const transactionService = new TransactionService();
 export async function CreateTransaction(req: Request, res: Response) {
     try {
 
-        let desc = req.body.desc;
-        let transaction = await transactionService.create({desc})
+        let body=req.body;
+        let transaction = await transactionService.addTransaction(body.from,body.to,body.amount,body.status)
         return res.send({transaction: transaction});
     } catch (e: any) {
         return res.status(404).send({message: e.message});
@@ -50,8 +50,9 @@ export async function GetTransaction(req: Request, res: Response) {
  * @param res
  * @constructor
  */
-export async function getGateWayTransactions(req: Request, res: Response) {
-    let id: string = req.params.id;
+export async function getGateWayTransactions
+(req: Request, res: Response) {
+    let id: string = req.body.id;
 
     try {
         let transaction = await transactionService.findByIdOrFail(id);

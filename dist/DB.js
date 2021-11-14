@@ -36,158 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongodb_1 = require("mongodb");
-var url = "mongodb://localhost:27017/";
-var connect = function () {
-    return new Promise(function (resolve, reject) {
-        mongodb_1.MongoClient.connect(url, function (err, mongoClient) {
-            if (err)
-                return reject(err);
-            if (mongoClient)
-                return resolve({ mongoClient: mongoClient, db: mongoClient.db("Bank") });
-            return reject(new Error("can't connect to db"));
-        });
-    });
-};
-function insert(collection, data) {
-    return new Promise(function (resolve, reject) {
-        connect().then(function (d) {
-            return d.db.collection(collection).insertOne(data, function (err, res) {
-                if (err)
-                    return reject(err);
-                d.mongoClient.close();
-                return resolve(res === null || res === void 0 ? void 0 : res.insertedId.toString());
-            });
-        });
-    });
-}
-function get(collection, data) {
-    return new Promise(function (resolve, reject) {
-        connect().then(function (d) {
-            return d.db.collection(collection).find(data).toArray(function (err, res) {
-                if (err)
-                    return reject(err);
-                d.mongoClient.close();
-                return resolve(res);
-            });
-        });
-    });
-}
-function addUser(Name, BirthDate, Email, Mobile) {
-    return __awaiter(this, void 0, void 0, function () {
-        var id;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, insert("User", { Name: Name, BirthDate: BirthDate, Email: Email, Mobile: Mobile })];
-                case 1:
-                    id = _a.sent();
-                    return [4 /*yield*/, id];
-                case 2: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function getUser(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, get("User", data)];
-                case 1: 
-                //const id = new ObjectId(UserId);
-                return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function addAccount(UserId, AccountNumber, Balnce) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, insert("Account", { UserId: UserId, AccountNumber: AccountNumber, Balnce: Balnce })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function getAccount(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, get("Account", data)];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function addCard(AccountID, CardNumber, CardHolderName, ExpireDate, CVV, Status) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, insert("Card", { AccountID: AccountID, CardNumber: CardNumber, CardHolderName: CardHolderName, ExpireDate: ExpireDate, CVV: CVV, Status: Status })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function getCard(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, get("Card", data)];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function addTransaction(FromAccount, ToAccount, Amount, Status) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, insert("Transaction", { FromAccount: FromAccount, ToAccount: ToAccount, Amount: Amount, Status: Status })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function getTransaction(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, get("Transaction", data)];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function addGateway(userId, userName, password, passwordExpireDate) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, insert("Gateway", { userId: userId, userName: userName, password: password, passwordExpireDate: passwordExpireDate })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-function getGateway(data) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, get("Gateway", data)];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
+exports.createGateway = exports.createUser = void 0;
+var UsersService_1 = require("./Services/UsersService");
+var AccountService_1 = require("./Services/AccountService");
+var CardService_1 = require("./Services/CardService");
+var GateWayService_1 = require("./Services/GateWayService");
 function createUser(Name, BirthDate, Email, Mobile, Balnce) {
     return __awaiter(this, void 0, void 0, function () {
-        var userid, accountID, count, i, cardID;
+        var userService, accountService, cardService, userid, accountID, count, i, cardID;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, addUser(Name, BirthDate, Email, Mobile)];
+                case 0:
+                    userService = new UsersService_1.UsersService();
+                    accountService = new AccountService_1.AccountService();
+                    cardService = new CardService_1.CardService();
+                    return [4 /*yield*/, userService.addUser(Name, BirthDate, Email, Mobile)];
                 case 1:
                     userid = _a.sent();
-                    return [4 /*yield*/, addAccount(userid, Math.floor(Math.random() * 1E16), Balnce)];
+                    return [4 /*yield*/, accountService.addAccount(userid, Math.floor(Math.random() * 1E16), Balnce)];
                 case 2:
                     accountID = _a.sent();
                     count = 0;
@@ -202,7 +68,7 @@ function createUser(Name, BirthDate, Email, Mobile, Balnce) {
                     }
                     if (count < 2)
                         count = Name.length;
-                    return [4 /*yield*/, addCard(accountID, Math.floor(Math.random() * 1E16), Name.substring(0, count), "11/24", Math.floor(Math.random() * 1E3), "Active")];
+                    return [4 /*yield*/, cardService.addCard(accountID, Math.floor(Math.random() * 1E16), Name.substring(0, count), "11/24", Math.floor(Math.random() * 1E3), "Active")];
                 case 3:
                     cardID = _a.sent();
                     return [2 /*return*/, userid];
@@ -210,12 +76,15 @@ function createUser(Name, BirthDate, Email, Mobile, Balnce) {
         });
     });
 }
+exports.createUser = createUser;
 function createGateway(Name, Email, Mobile) {
     return __awaiter(this, void 0, void 0, function () {
-        var userID, user, pass, today, mm, yyyy, expir;
+        var gateWayService, userID, user, pass, today, mm, yyyy, expir;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, createUser(Name, "1/1/2021", Email, Mobile, 0)];
+                case 0:
+                    gateWayService = new GateWayService_1.GateWayService();
+                    return [4 /*yield*/, createUser(Name, "1/1/2021", Email, Mobile, 0)];
                 case 1:
                     userID = _a.sent();
                     user = Name.split(" ").join("");
@@ -224,35 +93,10 @@ function createGateway(Name, Email, Mobile) {
                     mm = String(today.getMonth() + 1).padStart(2, '0');
                     yyyy = today.getFullYear() + 1;
                     expir = mm + '/' + yyyy;
-                    addGateway(userID, user, pass, expir);
+                    gateWayService.addGateway(userID, user, pass, expir);
                     return [2 /*return*/];
             }
         });
     });
 }
-function run() {
-    return __awaiter(this, void 0, void 0, function () {
-        var res, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0: return [4 /*yield*/, createUser("Ahmed Elsayed Mohamed Mohamed", "12/12/1995", "ahmed@outlook.com", "01555255222", 100000)];
-                case 1:
-                    res = _c.sent();
-                    _b = (_a = console).log;
-                    return [4 /*yield*/, getUser({ _id: new mongodb_1.ObjectId(res.toString()) })];
-                case 2:
-                    _b.apply(_a, [_c.sent()]);
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-module.exports = { createUser: createUser, createGateway: createGateway, getUser: getUser, getAccount: getAccount, getCard: getCard, getGateway: getGateway, getTransaction: getTransaction };
-//run();
-//creategateway("Team 2","team2@gmail.com","0111111111")
-//addTransaction("8287392010546621","7423399946407152","1000","accepted")
-//getUser("61867f8f6e08ea4335e0f280")
-//getAccount("1111111")
-//getCard("7423399946407152")
-//getGateway("Team2")
-//getTransaction("7423399946407152")
+exports.createGateway = createGateway;

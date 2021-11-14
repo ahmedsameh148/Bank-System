@@ -1,20 +1,23 @@
-import {TransactionRepository} from "../Data/Repositories/TransactionRepository";
+import {TransactionsRepository} from "../Data/Repositories/TransactionRepository";
 import {Transaction} from "../Data/Models/Transaction.Model";
 
-let transactionRepo = new TransactionRepository()
+let transactionRepo = new TransactionsRepository()
 
 export class TransactionService {
 
-    async create(data: { desc: string }) {
-        let transaction = new Transaction(data.desc);
-        let transactionId = (await transactionRepo.insert(transaction))?.toString() || "";
+    async addTransaction(FromAccount: string, ToAccount: string, Amount: number, Status: string){
+        let transaction = new Transaction(FromAccount,ToAccount,Amount,Status);
+        let transactionId = (await transactionRepo.insert(transaction)).toString() || "";
         return this.findByIdOrFail(transactionId);
 
     }
-
-    all() {
-        return transactionRepo.findAll();
+    async  getTransaction(data : object){
+    
+        return transactionRepo.get( data)
     }
+    // all() {
+    //     return transactionRepo.findAll();
+    // }
 
     findById(id: string) {
         return transactionRepo.findById(id)
@@ -28,17 +31,15 @@ export class TransactionService {
         throw new Error("missing or invalid Id")
     }
 
-    async update(transaction: Transaction, data: { desc: string }) {
-        let newTransaction = new Transaction(data.desc);
-        return transactionRepo.update(transaction._id as string, newTransaction)
+    // async update(transaction: Transaction, data: { desc: string }) {
+    //     let newTransaction = new Transaction(data.desc);
+    //     return transactionRepo.update(transaction._id as string, newTransaction)
 
-    }
+    // }
 
-    deleteById(id: string) {
-        return transactionRepo.delete(id);
-    }
+    
 
-    async findAndUpdate(id: string, body: any) {
-        return this.update(await this.findByIdOrFail(id), body);
-    }
-}
+//     async findAndUpdate(id: string, body: any) {
+//         return this.update(await this.findByIdOrFail(id), body);
+//     }
+ }

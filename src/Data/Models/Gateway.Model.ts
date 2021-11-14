@@ -3,8 +3,8 @@ export class GateWay {
     userId:string
     userName:string
     password:string
-    passwordExpireDate:Date
-    constructor(userID: string,userName: string,password:string,passwordExpireDate:Date) {
+    passwordExpireDate:string
+    constructor(userID: string,userName: string,password:string,passwordExpireDate:string) {
         this.userId=userID
         this.userName=userName
         this.password=password

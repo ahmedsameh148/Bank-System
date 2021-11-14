@@ -1,10 +1,10 @@
 import {Db, MongoClient} from "mongodb";
 
-const url = "mongodb://root:root@localhost:27017/";
+const url = "mongodb://localhost:27017/";
 
 export type  ConnectResponse = { mongoClient: MongoClient, db: Db };
 
-export const ConnectToMongo = (): Promise<ConnectResponse> => {
+export const connect = (): Promise<ConnectResponse> => {
     return new Promise((resolve, reject) => {
         MongoClient.connect(url, function (err, mongoClient: MongoClient | undefined) {
             if (err) return reject(err);
