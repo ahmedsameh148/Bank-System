@@ -5,14 +5,14 @@ let transactionRepo = new TransactionsRepository()
 
 export class TransactionService {
 
-    async addTransaction(FromAccount: string, ToAccount: string, Amount: number, Status: string){
-        let transaction = new Transaction(FromAccount,ToAccount,Amount,Status);
-        let transactionId = (await transactionRepo.insert(transaction)).toString() || "";
-        return this.findByIdOrFail(transactionId);
+    async addTransaction(FromAccount: string, ToAccount: string, Amount: number, Status: string,gateWay:string){
+        
+        let transaction = new Transaction(FromAccount,ToAccount,Amount,Status,gateWay);
+        return transactionRepo.insert(transaction);
 
     }
     async  getTransaction(data : object){
-    
+        
         return transactionRepo.get( data)
     }
     // all() {
@@ -31,11 +31,10 @@ export class TransactionService {
         throw new Error("missing or invalid Id")
     }
 
-    // async update(transaction: Transaction, data: { desc: string }) {
-    //     let newTransaction = new Transaction(data.desc);
-    //     return transactionRepo.update(transaction._id as string, newTransaction)
+    async  updateTransaction(data: object,updatedData:object): Promise<Transaction[] | any> {
 
-    // }
+        return await transactionRepo.update(data,updatedData);
+    }
 
     
 

@@ -15,8 +15,8 @@ var TransactionsRouter = /** @class */ (function () {
     TransactionsRouter.prototype.getRouter = function () {
         var route = express_1.default.Router();
         route.get("/", TransactionsController_1.getGateWayTransactions);
-        route.post("/", TransactionsController_1.CreateTransaction);
-        route.get("/:id", TransactionsController_1.GetTransaction);
+        route.post("/", TransactionsController_1.transactionsSave);
+        //route.get("/:id", GetTransaction);
         return route;
     };
     return TransactionsRouter;

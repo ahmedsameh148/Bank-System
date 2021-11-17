@@ -21,7 +21,7 @@ var BaseRepo = /** @class */ (function () {
         });
     };
     BaseRepo.prototype.get = function (data) {
-        this.findAll(data);
+        return this.findAll(data);
     };
     BaseRepo.prototype.insert = function (item) {
         var _this = this;
@@ -33,6 +33,14 @@ var BaseRepo = /** @class */ (function () {
                     resolve(res === null || res === void 0 ? void 0 : res.insertedId);
                     d.mongoClient.close();
                 });
+            });
+        });
+    };
+    BaseRepo.prototype.update = function (data, updatedData) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            (0, MongoConnection_1.connect)().then(function (d) {
+                return d.db.collection(_this.collectionName).updateOne(data, updatedData).then(function () { return resolve(true); }).catch(reject);
             });
         });
     };

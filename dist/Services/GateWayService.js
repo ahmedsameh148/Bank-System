@@ -59,6 +59,24 @@ var GateWayService = /** @class */ (function () {
             });
         });
     };
+    GateWayService.prototype.findById = function (id) {
+        return getwayRepo.findById(id);
+    };
+    GateWayService.prototype.findByIdOrFail = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var gateWay;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.findById(id)];
+                    case 1:
+                        gateWay = _a.sent();
+                        if (gateWay)
+                            return [2 /*return*/, gateWay];
+                        throw new Error("missing or invalid Id");
+                }
+            });
+        });
+    };
     return GateWayService;
 }());
 exports.GateWayService = GateWayService;

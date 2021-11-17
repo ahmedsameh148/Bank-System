@@ -9,7 +9,7 @@ var connect = function () {
             if (err)
                 return reject(err);
             if (mongoClient)
-                return resolve({ mongoClient: mongoClient, db: mongoClient.db("fintech") });
+                return resolve({ mongoClient: mongoClient, db: mongoClient.db("Bank") });
             return reject(new Error("cant connect to db"));
         });
     });

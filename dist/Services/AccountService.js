@@ -59,6 +59,13 @@ var AccountService = /** @class */ (function () {
             });
         });
     };
+    AccountService.prototype.updateAccount = function (data, updatedData) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, accountRepo.update(data, updatedData)];
+            });
+        });
+    };
     return AccountService;
 }());
 exports.AccountService = AccountService;

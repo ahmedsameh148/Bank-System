@@ -18,12 +18,14 @@ export abstract class BaseRepo<Model> {
         });
     }
      get( data: object) {
-        this.findAll(data)
+        return this.findAll(data)
     }
 
     insert(item: Model): Promise<ObjectId | undefined> {
+        
         return new Promise((resolve, reject) => {
             connect().then((d) => {
+                
                 return d.db.collection(this.collectionName).insertOne(item, function (err, res) {
                     if (err) return reject(err);
                     resolve(res?.insertedId);
@@ -33,6 +35,13 @@ export abstract class BaseRepo<Model> {
         });
     }
 
+     update( data: object, updatedData: object) {
+        return new Promise((resolve, reject) => {
+            connect().then((d) => {
+                return d.db.collection(this.collectionName).updateOne(data, updatedData).then(() => resolve(true)).catch(reject);
+            });
+        });
+    }
     
     findById(id: string): Promise<Model> {
         return new Promise((resolve, reject) => {

@@ -1,9 +1,8 @@
 import {RouteInterface} from "../Core/Interfaces/Route.Interface";
 import express, {IRouter} from "express";
 import {
-    CreateTransaction, getGateWayTransactions,
+    transactionsSave, getGateWayTransactions,
     
-    GetTransaction
 } from "../Controllers/TransactionsController";
 
 
@@ -17,8 +16,8 @@ export class TransactionsRouter implements RouteInterface {
         const route = express.Router();
 
         route.get("/", getGateWayTransactions);
-        route.post("/", CreateTransaction);
-        route.get("/:id", GetTransaction);
+        route.post("/", transactionsSave);
+        //route.get("/:id", GetTransaction);
 
 
         return route;

@@ -3,11 +3,13 @@ export class Transaction {
     from:string
     to:string
     amount:number
+    gateWay:string
     status:string
-    constructor(from: string,to: string,amount:number,status:string) {
+    constructor(from: string,to: string,amount:number,status:string,gateway:string) {
         this.from = from;
         this.to = to;
         this.amount = amount;
         this.status = status;
+        this.gateWay=gateway;
     }
 }

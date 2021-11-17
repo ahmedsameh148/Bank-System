@@ -17,4 +17,8 @@ export class AccountService {
         return accountRepo.get(data);
     }
  
+     async  updateAccount(data: object,updatedData:object): Promise<Account[] | any> {
+
+        return  accountRepo.update(data,updatedData);
+    }
 }

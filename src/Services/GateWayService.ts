@@ -16,5 +16,15 @@ export class GateWayService {
         
         return getwayRepo.get(data);
     }
- 
+    findById(id: string) {
+        return getwayRepo.findById(id)
+    }
+
+    async findByIdOrFail(id: string)  {
+        let gateWay = await this.findById(id);
+        if (gateWay)
+            return gateWay;
+
+        throw new Error("missing or invalid Id")
+    }
 }

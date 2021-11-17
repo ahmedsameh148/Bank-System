@@ -31,14 +31,17 @@ export async function createUser( Name: string, BirthDate: string, Email: string
 
 export async function createGateway (Name: string, Email: string, Mobile: string){
     let gateWayService= new GateWayService();
+    
     const userID = await createUser(Name,"1/1/2021",Email,Mobile,0)
     var user=Name.split(" ").join("");
+    console.log(user);
     var pass=Math.random().toString(36).slice(-8)
     var today = new Date()
     var mm = String(today.getMonth() + 1).padStart(2, '0') 
     var yyyy = today.getFullYear()+1
     var expir = mm + '/' + yyyy
+    console.log("Flag")
     gateWayService.addGateway(userID,user,pass,expir)
-    
+    console.log("Flag")
 }
 

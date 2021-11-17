@@ -88,12 +88,15 @@ function createGateway(Name, Email, Mobile) {
                 case 1:
                     userID = _a.sent();
                     user = Name.split(" ").join("");
+                    console.log(user);
                     pass = Math.random().toString(36).slice(-8);
                     today = new Date();
                     mm = String(today.getMonth() + 1).padStart(2, '0');
                     yyyy = today.getFullYear() + 1;
                     expir = mm + '/' + yyyy;
+                    console.log("Flag");
                     gateWayService.addGateway(userID, user, pass, expir);
+                    console.log("Flag");
                     return [2 /*return*/];
             }
         });

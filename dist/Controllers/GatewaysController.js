@@ -36,60 +36,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransactionService = void 0;
-var TransactionRepository_1 = require("../Data/Repositories/TransactionRepository");
-var Transaction_Model_1 = require("../Data/Models/Transaction.Model");
-var transactionRepo = new TransactionRepository_1.TransactionsRepository();
-var TransactionService = /** @class */ (function () {
-    function TransactionService() {
-    }
-    TransactionService.prototype.addTransaction = function (FromAccount, ToAccount, Amount, Status, gateWay) {
-        return __awaiter(this, void 0, void 0, function () {
-            var transaction;
-            return __generator(this, function (_a) {
-                transaction = new Transaction_Model_1.Transaction(FromAccount, ToAccount, Amount, Status, gateWay);
-                return [2 /*return*/, transactionRepo.insert(transaction)];
-            });
+exports.validateGatwayCredintials = void 0;
+var GateWayService_1 = require("../Services/GateWayService");
+var gwService = new GateWayService_1.GateWayService();
+function validateGatwayCredintials(userName, password, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var foundGateway, passwordExpireDate, today;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, gwService.getGetway({ userName: userName })];
+                case 1:
+                    foundGateway = _a.sent();
+                    if (password !== foundGateway[0].password)
+                        return [2 /*return*/, res.status(204).json({ msg: 'Password or Username are incorrect' })];
+                    passwordExpireDate = new Date(foundGateway[0].passwordExpireDate);
+                    today = new Date();
+                    if (passwordExpireDate.getDate() > today.getDate())
+                        return [2 /*return*/, res.status(204).json({ msg: 'Password Expired' })];
+                    return [2 /*return*/, foundGateway[0]];
+            }
         });
-    };
-    TransactionService.prototype.getTransaction = function (data) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, transactionRepo.get(data)];
-            });
-        });
-    };
-    // all() {
-    //     return transactionRepo.findAll();
-    // }
-    TransactionService.prototype.findById = function (id) {
-        return transactionRepo.findById(id);
-    };
-    TransactionService.prototype.findByIdOrFail = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            var transaction;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.findById(id)];
-                    case 1:
-                        transaction = _a.sent();
-                        if (transaction)
-                            return [2 /*return*/, transaction];
-                        throw new Error("missing or invalid Id");
-                }
-            });
-        });
-    };
-    TransactionService.prototype.updateTransaction = function (data, updatedData) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, transactionRepo.update(data, updatedData)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    return TransactionService;
-}());
-exports.TransactionService = TransactionService;
+    });
+}
+exports.validateGatwayCredintials = validateGatwayCredintials;

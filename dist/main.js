@@ -30,7 +30,9 @@ app.listen(3003);
 // let as= new AccountService();
 // let gs= new GateWayService()
 // let cs= new CardService()
-// tr.addTransaction("8287392010546621","7423399946407152",100,"accepted")
+// let gw=gs.getGetway({userName:"Team2"})
+// tr.addTransaction("8287392010546621","7423399946407152",100,"accepted","0");
+// //manually change the "0" to the gw id
 // us.getUser({id: "61867f8f6e08ea4335e0f280"})
 // as.getAccount({id: "1111111"})
 // cs.getCard({id:"7423399946407152"})

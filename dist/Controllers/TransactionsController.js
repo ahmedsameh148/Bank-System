@@ -36,65 +36,77 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGateWayTransactions = exports.GetTransaction = exports.CreateTransaction = void 0;
+exports.refund = exports.getGateWayTransactions = exports.transactionsSave = void 0;
 var TransactionService_1 = require("../Services/TransactionService");
+var AccountService_1 = require("../Services/AccountService");
+var CardsController_1 = require("./CardsController");
+var AccountsController_1 = require("./AccountsController");
+var GatewaysController_1 = require("./GatewaysController");
+var GateWayService_1 = require("../Services/GateWayService");
+var CardService_1 = require("../Services/CardService");
 var transactionService = new TransactionService_1.TransactionService();
+var accountService = new AccountService_1.AccountService();
+var gateWayService = new GateWayService_1.GateWayService();
+var cardService = new CardService_1.CardService();
 /**
  *
  * @param req
  * @param res
  * @constructor
  */
-function CreateTransaction(req, res) {
+function transactionsSave(req, res) {
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function () {
-        var body, transaction, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var gw, card, body, from, transaction, e_1;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    body = req.body;
-                    return [4 /*yield*/, transactionService.addTransaction(body.from, body.to, body.amount, body.status)];
+                    _e.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, (0, GatewaysController_1.validateGatwayCredintials)((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.userName, (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.password, res)];
                 case 1:
-                    transaction = _a.sent();
-                    return [2 /*return*/, res.send({ transaction: transaction })];
+                    _e.sent();
+                    return [4 /*yield*/, (0, CardsController_1.validateCard)(req, res)];
                 case 2:
-                    e_1 = _a.sent();
-                    return [2 /*return*/, res.status(404).send({ message: e_1.message })];
-                case 3: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.CreateTransaction = CreateTransaction;
-/**
- *
- * @param req
- * @param res
- * @constructor
- */
-function GetTransaction(req, res) {
-    return __awaiter(this, void 0, void 0, function () {
-        var id, transaction, e_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    id = req.params.id;
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, transactionService.findByIdOrFail(id)];
-                case 2:
-                    transaction = _a.sent();
-                    return [2 /*return*/, res.send({ transaction: transaction })];
+                    _e.sent();
+                    return [4 /*yield*/, gateWayService.getGetway({ userName: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.userName })];
                 case 3:
-                    e_2 = _a.sent();
-                    return [2 /*return*/, res.status(404).send({ message: e_2.message })];
-                case 4: return [2 /*return*/];
+                    gw = _e.sent();
+                    return [4 /*yield*/, cardService.getCard({ cardNumber: Number((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.cardNumber) })];
+                case 4:
+                    card = _e.sent();
+                    body = req.body;
+                    from = card[0].accountId.toString();
+                    return [4 /*yield*/, (0, AccountsController_1.transfer)(req, from, res)];
+                case 5:
+                    _e.sent();
+                    return [4 /*yield*/, transactionService.addTransaction(from, body.to, body.amount, "Successful", gw[0]._id.toString())];
+                case 6:
+                    transaction = _e.sent();
+                    return [2 /*return*/, res.status(200).send({ transaction: transaction.toString() })];
+                case 7:
+                    e_1 = _e.sent();
+                    return [2 /*return*/, res.status(404).send({ message: e_1.message })];
+                case 8: return [2 /*return*/];
             }
         });
     });
 }
-exports.GetTransaction = GetTransaction;
+exports.transactionsSave = transactionsSave;
+/**
+ *
+ * @param req
+ * @param res
+ * @constructor
+ */
+// export async function GetTransaction(req: Request, res: Response) {
+//     let id: string = req.params.id;
+//     try {
+//         let transaction = await transactionService.findByIdOrFail(id);
+//         return res.send({transaction: transaction});
+//     } catch (e: any) {
+//         return res.status(404).send({message: e.message});
+//     }
+// }
 /**
  *
  * @param req
@@ -102,25 +114,76 @@ exports.GetTransaction = GetTransaction;
  * @constructor
  */
 function getGateWayTransactions(req, res) {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var id, transaction, e_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var gw, body, transactions, e_2;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    id = req.body.id;
-                    _a.label = 1;
+                    _d.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, (0, GatewaysController_1.validateGatwayCredintials)((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.userName, (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.password, res)];
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, transactionService.findByIdOrFail(id)];
+                    _d.sent();
+                    return [4 /*yield*/, gateWayService.getGetway({ userName: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.userName })];
                 case 2:
-                    transaction = _a.sent();
-                    return [2 /*return*/, res.send({ transaction: transaction })];
+                    gw = _d.sent();
+                    body = req.body;
+                    return [4 /*yield*/, transactionService.getTransaction({ gateWay: gw[0]._id.toString() })];
                 case 3:
-                    e_3 = _a.sent();
-                    return [2 /*return*/, res.status(404).send({ message: e_3.message })];
-                case 4: return [2 /*return*/];
+                    transactions = _d.sent();
+                    return [2 /*return*/, res.status(200).send({ transactions: transactions })];
+                case 4:
+                    e_2 = _d.sent();
+                    return [2 /*return*/, res.status(404).send({ message: e_2.message })];
+                case 5: return [2 /*return*/];
             }
         });
     });
 }
 exports.getGateWayTransactions = getGateWayTransactions;
+function refund(req, res) {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function () {
+        var id, transactionSearched, to, from, amount, valueAfterWithdraw, valueAfterDeposit, error_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    if (!((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.transaction))
+                        return [2 /*return*/, res.status(204).json({ msg: 'Please enter a valid body.' })];
+                    id = (_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.transaction;
+                    return [4 /*yield*/, transactionService.findByIdOrFail(id)];
+                case 1:
+                    transactionSearched = _c.sent();
+                    to = parseInt(transactionSearched[0].to);
+                    from = parseInt(transactionSearched[0].from);
+                    amount = parseInt(transactionSearched[0].amount);
+                    valueAfterWithdraw = to - amount;
+                    if (transactionSearched.status === "refunded")
+                        return [2 /*return*/, res.status(204).json({ msg: 'Transaction is already refunded' })];
+                    if (valueAfterWithdraw < 0)
+                        return [2 /*return*/, res.status(204).json({ msg: 'Insuffecient funds' })];
+                    valueAfterDeposit = from + amount;
+                    _c.label = 2;
+                case 2:
+                    _c.trys.push([2, 6, , 7]);
+                    return [4 /*yield*/, accountService.updateAccount({ _id: transactionSearched[0].to }, { $set: { balance: valueAfterWithdraw } })];
+                case 3:
+                    _c.sent();
+                    return [4 /*yield*/, accountService.updateAccount({ _id: transactionSearched[0].from }, { $set: { balance: valueAfterDeposit } })];
+                case 4:
+                    _c.sent();
+                    return [4 /*yield*/, transactionService.updateTransaction({ _id: transactionSearched[0].id }, { $set: { status: "refunded" } })];
+                case 5:
+                    _c.sent();
+                    res.status(200).json({ msg: 'Successfully executed service.' });
+                    return [3 /*break*/, 7];
+                case 6:
+                    error_1 = _c.sent();
+                    res.status(500).json({ msg: 'Internal Error. Please contact the administrator' });
+                    return [3 /*break*/, 7];
+                case 7: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.refund = refund;
